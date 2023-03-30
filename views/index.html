@@ -13,12 +13,22 @@
     <h1>Exercise tracker</h1>
 
     <div class="form-wrapper">
-      <form action="/api/users" method="post">
+      <form id="create-user-form" method="post">
         <h3>Create a New User</h3>
         <p><code>POST /api/users</code></p>
         <input id="uname" type="text" name="username" placeholder="username" />
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Create" />
       </form>
+
+      <form id="get-id" method="post">
+        <h3>Get your ID</h3>
+        <p><code>POST /api/userID</code></p>
+        <input id="username" type="text" name="username" placeholder="username" />
+        <input type="submit" value="Get ID" />
+      </form>
+    </div>
+
+    <div>
       <form id="exercise-form" method="post">
         <h3>Add exercises</h3>
         <p><code>POST /api/users/:_id/exercises</code></p>
@@ -38,10 +48,38 @@
     <p><strong>from, to</strong> = dates (yyyy-mm-dd); <strong>limit</strong> = number</p>
   </div>
   <script>
+    const createUserForm = document.getElementById("create-user-form");
     const exerciseForm = document.getElementById("exercise-form");
+    const getId = document.getElementById("get-id");
+
+    createUserForm.addEventListener("submit", () => {
+      const userName = document.getElementById("uname").value;
+      if (userName == "") {
+        alert("Enter Username of your wish");
+        return;
+      }
+      createUserForm.action = "/api/users";
+
+      createUserForm.submit();
+    });
+
+    getId.addEventListener("submit", () => {
+      const userName = document.getElementById("username").value;
+      if (userName == "") {
+        alert("Enter your Username");
+        return;
+      }
+      getId.action = "/api/userID";
+
+      getId.submit();
+    });
 
     exerciseForm.addEventListener("submit", () => {
       const userId = document.getElementById("uid").value;
+      if (userId == "") {
+        alert("Enter User ID to proceed");
+        return;
+      }
       exerciseForm.action = `/api/users/${userId}/exercises`;
 
       exerciseForm.submit();

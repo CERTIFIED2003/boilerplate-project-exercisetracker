@@ -67,6 +67,5 @@ code {
 
 .form-wrapper {
   display: flex;
-  flex-direction: row;
   gap: 10px;
 }

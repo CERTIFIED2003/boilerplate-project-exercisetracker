@@ -40,8 +40,8 @@ app.post("/api/users", async (req, res) => {
     const userName = req.body.username;
 
     // Check if "userName" already exists in User database
-    const check = await User.findOne({ username: userName });
-    if (check) return res.json({ error: "Username already exists" });
+    const userObj = await User.findOne({ username: userName });
+    if (userObj) return res.json({ error: "User with the given username already exists" });
 
     // Create a new User in database
     const user = await new User({
@@ -49,6 +49,21 @@ app.post("/api/users", async (req, res) => {
     }).save();
 
     res.json(user);
+  }
+  catch (error) {
+    return res.json({ error: error.message });
+  }
+});
+
+// Get User ID API endpoint
+app.post("/api/userID", async (req, res) => {
+  try {
+    const userName = req.body.username;
+
+    // Check if "userName" already exists in User database
+    const userObj = await User.findOne({ username: userName });
+    if (userObj) return res.json(userObj);
+    res.json({ error: `No ID found for ${userName}` })
   }
   catch (error) {
     return res.json({ error: error.message });
@@ -69,13 +84,17 @@ app.get("/api/users", async (req, res) => {
 // Create User's exercise in database
 app.post("/api/users/:_id/exercises", async (req, res) => {
   try {
-    const id = req.params._id;
+    const id = req.params._id; console.log(id)
 
     // Check if "userName" already exists in User database
     const user = await User.findById(id);
     if (!user) return res.json({ error: "User of the given 'id' doesn't exists" });
 
     const { description, duration, date } = req.body;
+
+    if (!description) return res.json({ error: "Please provide Exercise description to proceed" });
+    if (!duration) return res.json({ error: "Please provide Exercise duration to proceed" });
+
     const exercise = await new Exercise({
       user_id: user._id,
       description: description,
@@ -92,7 +111,8 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     });
   }
   catch (error) {
-    return res.json({ error: error.message });
+    return res.json({ error: "Error adding Exercise... Try agian after some time" });
+    // {"error":"Cast to ObjectId failed for value \"a\" (type string) at path \"_id\" for model \"User\""} <-- When wrong user id passed
   }
 });
 
