@@ -84,7 +84,7 @@ app.get("/api/users", async (req, res) => {
 // Create User's exercise in database
 app.post("/api/users/:_id/exercises", async (req, res) => {
   try {
-    const id = req.params._id; console.log(id)
+    const id = req.params._id;
 
     // Check if "userName" already exists in User database
     const user = await User.findById(id);
@@ -141,7 +141,7 @@ app.get("/api/users/:_id/logs", async (req, res) => {
   const log = exercise.map((e) => ({
     description: e.description,
     duration: e.duration,
-    date: new Date(e.date).toDateString(),
+    date: e.date.toDateString(),
   }))
 
   res.json({
